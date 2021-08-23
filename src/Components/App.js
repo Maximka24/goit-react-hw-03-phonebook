@@ -1,6 +1,6 @@
 import React from "react";
 import shortid from "shortid";
-import listContacts from "../Data/Data.json";
+// import listContacts from "../Data/Data.json";
 
 import Section from "./Section/Section";
 import PhoneBook from "./Phonebook/Phonebook";
@@ -8,7 +8,7 @@ import Contacts from "./Contacts/Contacts";
 
 class App extends React.Component {
   state = {
-    contacts: listContacts,
+    contacts: [],
     filter: "",
   };
 
@@ -45,6 +45,21 @@ class App extends React.Component {
   changeFilterContacts = (e) => {
     this.setState({ filter: e.currentTarget.value });
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem("contacts");
+    const parsContacts = JSON.parse(contacts);
+
+    if (parsContacts) {
+      this.setState({ contacts: parsContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+    }
+  }
 
   render() {
     const { contacts, filter } = this.state;
